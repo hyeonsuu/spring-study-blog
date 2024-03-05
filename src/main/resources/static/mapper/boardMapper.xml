@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.springstudy.mapper.BoardMapper">
+
+    <select id="selectList" resultType="map">
+        /* selectList */
+        SELECT
+           id,
+           name,
+           gender,
+           age,
+           address,
+           DATE_FORMAT(reg_datetime ,'%Y-%m-%d') AS reg_datetime,
+           DATE_FORMAT(modified_datetime ,'%Y-%m-%d') AS modified_datetime
+        FROM board
+        ORDER BY reg_datetime
+    </select>
+
+    <insert id="insertList" parameterType="map">
+        /* insertList */
+        INSERT INTO board
+            (NAME, gender, age, address, reg_datetime)
+        VALUES
+            (#{name},#{gender}, #{age}, #{address}, now())
+    </insert>
+</mapper>
