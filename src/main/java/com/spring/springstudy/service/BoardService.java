@@ -20,4 +20,10 @@ public class BoardService {
         return selectList;
     }
 
+    public void insertBoardList(Map<String, Object> param) {
+        boardMapper.insertBoardList(param);
+    }
+
+
+
 }

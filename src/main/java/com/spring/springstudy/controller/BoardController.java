@@ -67,4 +67,18 @@ public class BoardController {
         }
         return ResponseEntity.ok(gson.toJson(result));
     }
+
+    @RequestMapping(value = "/insertBoardList", method = {RequestMethod.POST})
+    public ResponseEntity<String> insertBoardList(@RequestParam Map<String, Object> param, HttpServletRequest req, HttpServletResponse res){
+        Result result = new Result();
+
+        try {
+            boardService.insertBoardList(param);
+        } catch (Exception e) {
+            log.debug("error : " + e.getMessage());
+            e.printStackTrace();
+            result = new Result(CommonCode.ERROR_OTHER);
+        }
+        return ResponseEntity.ok(gson.toJson(result));
+    }
 }

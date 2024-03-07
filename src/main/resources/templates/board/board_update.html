@@ -1,10 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
+<h1>게시판 수정</h1>
+<br>
+<br>
+<table class="tg" style="border: 1px solid black; width: 450px; height: 100%;">
+    <tr>
+        <th style="border: 1px solid black; width: 80px; height: 30px;" class="tg-0lax" >이름</th>
+        <td><input type="text" id="name" style="width: 50%; height: 25px;"  placeholder="이름"></td>
+    </tr>
+    <tr>
+        <th style="border: 1px solid black; width: 80px; height: 30px;" class="tg-0lax">성별</th>
+        <td>
+            <select name="gender" id="gender" style="width: 40%; height: 28px;">
+                <option value="none">===== 선택 =====</option>
+                <option value="F">여성</option>
+                <option value="M">남성</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th style="border: 1px solid black; width: 80px; height: 30px;" class="tg-0lax">나이</th>
+        <td><input type="text" id="age" style="width: 50%; height: 25px;" placeholder="나이"></td>
+    </tr>
+    <tr>
+        <th  style="border: 1px solid black;" class="tg-0lax" rowspan="2"><label>주소</label></th>
+        <td>
+            <input type="text" id="sample4_postcode" style="width: 50%; height: 25px;" placeholder="우편번호">
+            <button type="button" id="daumPostcode"  style="width: 20%; height: 30px;" class="button">주소검색</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="text" id="sample4_roadAddress" style="width: 98%; height: 25px; margin-bottom: 2px;" placeholder="도로명">
+            <span id="guide" style="color:#999; display:none"></span>
+            <input type="text" id="sample4_detailAddress" style="width: 98%; height: 25px;" placeholder="상세주소">
+        </td>
+    </tr>
+</table>
+<br />
+<div class="btn_wrap" style="margin-left: 180px;">
+    <button type="button" class="updateBtn" id="updateBtn">수정</button>
+    <button type="button" class="cancelBtn" id="cancelBtn">취소</button>
+</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">
 
+    // 다음 주소 API
+    $("#daumPostcode").click(function (e) {
+        sample4_execDaumPostcode();
+    });
+
+    // 데이터 등록
+    $("#insertBtn").click(function (e) {
+        insertBoardList();
+    });
+
+    // 취소버튼 -> 게시판 리스트 페이지로 이동
+    $("#cancelBtn").click(function (e) {
+        window.location.href = "/board/board_main";
+    });
+
+    function sample4_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('sample4_postcode').value = data.zonecode;
+                document.getElementById("sample4_roadAddress").value = roadAddr;
+
+                var guideTextBox = document.getElementById("guide");
+
+            }
+        }).open();
+    }
+
+    function insertBoardList() {
+
+        let name = $('#name').val();
+        let gender = $("#gender option:selected").val();
+        let age = $('#age').val();
+        let address = $('#sample4_postcode').val() + " " + $('#sample4_roadAddress').val() + " " + $('#sample4_detailAddress').val();
+
+        if(gender == "none") {
+            alert("성별을 선택해주세요.");
+            return false;
+        }
+
+        let params = {
+            name : name,
+            gender : gender,
+            age : age,
+            address : address
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "insertBoardList",
+            async: true,
+            dataType: 'json',
+            data: params,
+            success: function (res) {
+                /*
+                업체 등록에 성공했을 경우 : 만약 숫자만 들어가야하는 영역에 문자열을 넣었다거나, 필수입력항목을 채우지 않았을 경우엔 등록이 되지않고 retrun false 처리가 된다.
+                (실패하는 것은 아니고 다시 맞게 입력 후 등록버튼을 누르면 정상 등록처리 완료.)
+                */
+                if (res.resultCode == "S001") {
+                    alert("새로운 업체 데이터 등록에 성공했습니다.")
+                    document.location.reload();
+                } else {
+                    alert("업체 등록에 실패하였습니다.\n 에러발생 ::: " + "에러코드(" + res.resultCode + ")");
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>

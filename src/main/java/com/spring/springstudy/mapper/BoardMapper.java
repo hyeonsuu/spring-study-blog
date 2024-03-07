@@ -9,4 +9,7 @@ import java.util.Map;
 public interface BoardMapper {
 
     public List<Map<String,Object>> selectList();
+
+    public void insertBoardList(Map<String,Object> param);
+
 }

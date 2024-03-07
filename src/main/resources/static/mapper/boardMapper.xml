@@ -16,8 +16,8 @@
         ORDER BY reg_datetime
     </select>
 
-    <insert id="insertList" parameterType="map">
-        /* insertList */
+    <insert id="insertBoardList" parameterType="map">
+        /* insertBoardList */
         INSERT INTO board
             (NAME, gender, age, address, reg_datetime)
         VALUES
