@@ -73,7 +73,7 @@
                         var Table =
                             '<tr>'
                             + '<td style="border: 1px solid black; width: 5%;" class="tg-0lax">'
-                            + '<input type="checkbox" name="chk" class="chk" onclick="chkClicked()"' + 'value="' + data.id + '"/>'
+                            + '<input type="checkbox" name="chk" class="chk" onclick="chkClickedDelete('+ data.id +')"' + 'id="chk_'+ data.id +'"'+ 'value="' + data.id + '"/>'
                             + '</td>'
                             + '<td style="border: 1px solid black;" class="tg-0lax">' + data.id + '</td>'
                             + '<td style="border: 1px solid black;" class="tg-0lax">' + data.name + '</td>'
@@ -112,11 +112,14 @@
             }
         }
 
+        function chkClickedDelete(id) {
+            console.log("chkClickedDelete : " + id)
+
+        }
+
         //자식 체크박스 클릭 이벤트
         function chkClicked(){
-
             const deleteId = $(".chk").val();
-            console.log(deleteId)
 
             //체크박스 전체개수
             const allCount = document.querySelectorAll(".chk").length;
